@@ -2,13 +2,12 @@ package counter
 
 import (
 	_ "embed"
-	"github.com/timothylock/badger-go/internal/ui"
-	"image/color"
 	"machine"
 	"strconv"
 	"time"
 
 	"github.com/timothylock/badger-go/internal/apps"
+	"github.com/timothylock/badger-go/internal/ui"
 
 	"tinygo.org/x/drivers/uc8151"
 	"tinygo.org/x/tinyfont"
@@ -41,6 +40,7 @@ func (h *Counter) Run() error {
 	refresh := true
 
 	h.display.ClearBuffer()
+	h.display.WaitUntilIdle()
 	ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
 	ui.BottomNavBar(&h.display, "[a] Back", "", "")
 
@@ -53,8 +53,8 @@ func (h *Counter) Run() error {
 	btnDown.Configure(machine.PinConfig{Mode: machine.PinInputPulldown})
 
 	// Draw buttons
-	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 270, 40, "(+)", color.RGBA{R: 1, G: 1, B: 1, A: 255})
-	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 272, 100, "(-)", color.RGBA{R: 1, G: 1, B: 1, A: 255})
+	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 270, 40, "(+)", ui.ColourBlack())
+	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 272, 100, "(-)", ui.ColourBlack())
 
 	for {
 		if btnA.Get() {
@@ -71,12 +71,13 @@ func (h *Counter) Run() error {
 
 		if refresh {
 			// Write the last number in white to remove it from the screen. More efficient than redrawing all the elements
-			tinyfont.WriteLine(&h.display, &freesans.Bold24pt7b, 40, 80, "Count: "+strconv.Itoa(lastI), color.RGBA{R: 0, G: 0, B: 0, A: 255})
+			tinyfont.WriteLine(&h.display, &freesans.Bold24pt7b, 40, 80, "Count: "+strconv.Itoa(lastI), ui.ColourWhite())
 			// Write the new number
-			tinyfont.WriteLine(&h.display, &freesans.Bold24pt7b, 40, 80, "Count: "+strconv.Itoa(i), color.RGBA{R: 1, G: 1, B: 1, A: 255})
+			tinyfont.WriteLine(&h.display, &freesans.Bold24pt7b, 40, 80, "Count: "+strconv.Itoa(i), ui.ColourBlack())
 
 			// Show the buffer on the screen
 			h.display.Display()
+			h.display.WaitUntilIdle()
 			refresh = false
 		}
 

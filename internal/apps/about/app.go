@@ -34,6 +34,7 @@ func (h *About) GetAppConfig() apps.AppConfig {
 
 func (h *About) Run() error {
 	h.display.ClearBuffer()
+	h.display.WaitUntilIdle()
 	ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
 	ui.BottomNavBar(&h.display, "[a] Back", "", "")
 
@@ -47,6 +48,7 @@ func (h *About) Run() error {
 	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 5, 100, "Created by @timothylock (Github)", ui.ColourBlack())
 
 	h.display.Display()
+	h.display.WaitUntilIdle()
 	for {
 		if btnA.Get() {
 			return nil

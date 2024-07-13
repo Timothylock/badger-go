@@ -39,6 +39,7 @@ func (h *Home) GetAppConfig() apps.AppConfig {
 // Run should execute the app. It should not return until the app has finished executing.
 func (h *Home) Run() error {
 	h.display.ClearBuffer()
+	h.display.WaitUntilIdle()
 	refresh := true
 
 	// Initialize Buttons
@@ -86,6 +87,7 @@ func (h *Home) Run() error {
 
 			ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
 			h.display.Display()
+			h.display.WaitUntilIdle()
 			refresh = false
 		}
 
@@ -105,8 +107,10 @@ func (h *Home) launchApp(curPage []apps.Application, i int, btn machine.Pin) err
 	}
 
 	h.display.ClearBuffer()
+	h.display.WaitUntilIdle()
 	err := curPage[i].Run()
 	h.display.ClearBuffer()
+	h.display.WaitUntilIdle()
 	return err
 }
 

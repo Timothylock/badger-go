@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/timothylock/badger-go/internal/apps/about"
+	"github.com/timothylock/badger-go/internal/apps/badge"
 	"machine"
 
 	"tinygo.org/x/drivers/uc8151"
@@ -35,8 +36,6 @@ func main() {
 		}
 	}
 
-	about.NewAboutApp(display).Run()
-
 	err = homeScreen.Run()
 	if err != nil {
 		fmt.Printf("Failed to run homeScreen screen: %v", err)
@@ -46,7 +45,7 @@ func main() {
 
 func initApps(device *uc8151.Device) ([]apps.Application, error) {
 	applications := []apps.Application{
-		counter.NewCounterApp(device),
+		badge.NewBadgeApp(device),
 		counter.NewCounterApp(device),
 		about.NewAboutApp(device), // TODO: Replace with actual apps
 	}
