@@ -9,3 +9,7 @@ func ColourWhite() color.RGBA {
 func ColourBlack() color.RGBA {
 	return color.RGBA{R: 1, G: 1, B: 1, A: 255}
 }
+
+func ColourGrey() color.RGBA {
+	return color.RGBA{R: 1, G: 1, B: 1, A: 10}
+}
