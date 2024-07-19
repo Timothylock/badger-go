@@ -1,6 +1,7 @@
 package counter
 
 import (
+	"embed"
 	_ "embed"
 	"machine"
 	"strconv"
@@ -17,7 +18,7 @@ import (
 const appName = "Counter"
 
 //go:embed icon.png
-var appIcon []byte
+var appIconFS embed.FS
 
 type Counter struct {
 	display uc8151.Device
@@ -30,7 +31,7 @@ func NewCounterApp(display *uc8151.Device) apps.Application {
 func (h *Counter) GetAppConfig() apps.AppConfig {
 	return apps.AppConfig{
 		Name: appName,
-		Icon: appIcon,
+		Icon: appIconFS,
 	}
 }
 
@@ -39,11 +40,6 @@ func (h *Counter) Run() error {
 	lastI := 0
 	refresh := true
 
-	h.display.ClearBuffer()
-	h.display.WaitUntilIdle()
-	ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
-	ui.BottomNavBar(&h.display, "[a] Back", "", "")
-
 	// Initialize Buttons
 	btnA := machine.BUTTON_A
 	btnUp := machine.BUTTON_UP
@@ -51,10 +47,6 @@ func (h *Counter) Run() error {
 	btnA.Configure(machine.PinConfig{Mode: machine.PinInputPulldown})
 	btnUp.Configure(machine.PinConfig{Mode: machine.PinInputPulldown})
 	btnDown.Configure(machine.PinConfig{Mode: machine.PinInputPulldown})
-
-	// Draw buttons
-	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 270, 40, "(+)", ui.ColourBlack())
-	tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 272, 100, "(-)", ui.ColourBlack())
 
 	for {
 		if btnA.Get() {
@@ -70,6 +62,15 @@ func (h *Counter) Run() error {
 		}
 
 		if refresh {
+			h.display.ClearBuffer()
+			h.display.WaitUntilIdle()
+			ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
+			ui.BottomNavBar(&h.display, "[a] Back", "", "")
+
+			// Draw buttons
+			tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 270, 40, "(+)", ui.ColourBlack())
+			tinyfont.WriteLine(&h.display, &freesans.Regular9pt7b, 272, 100, "(-)", ui.ColourBlack())
+
 			// Write the last number in white to remove it from the screen. More efficient than redrawing all the elements
 			tinyfont.WriteLine(&h.display, &freesans.Bold24pt7b, 40, 80, "Count: "+strconv.Itoa(lastI), ui.ColourWhite())
 			// Write the new number

@@ -1,5 +1,7 @@
 package apps
 
+import "embed"
+
 const OSName = "BadgerGoOS"
 const OSVersion = "v0.0.1"
 
@@ -20,5 +22,5 @@ type Application interface {
 
 type AppConfig struct {
 	Name string
-	Icon []byte
+	Icon embed.FS
 }

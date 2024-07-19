@@ -67,8 +67,10 @@ func initScreen() (*uc8151.Device, error) {
 	display := uc8151.New(machine.SPI0, machine.EPD_CS_PIN, machine.EPD_DC_PIN, machine.EPD_RESET_PIN, machine.EPD_BUSY_PIN)
 	display.Configure(uc8151.Config{
 		Rotation: uc8151.ROTATION_270,
-		Speed:    uc8151.MEDIUM,
+		Speed:    uc8151.TURBO,
 		Blocking: true,
+		//FlickerFree: true,
+		//UpdateAfter: 10,
 	})
 
 	return &display, nil

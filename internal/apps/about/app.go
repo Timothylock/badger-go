@@ -1,6 +1,7 @@
 package about
 
 import (
+	"embed"
 	_ "embed"
 	"github.com/timothylock/badger-go/internal/apps"
 	"github.com/timothylock/badger-go/internal/ui"
@@ -15,7 +16,7 @@ import (
 const appName = "About"
 
 //go:embed icon.png
-var appIcon []byte
+var appIconFS embed.FS
 
 type About struct {
 	display uc8151.Device
@@ -28,7 +29,7 @@ func NewAboutApp(display *uc8151.Device) apps.Application {
 func (h *About) GetAppConfig() apps.AppConfig {
 	return apps.AppConfig{
 		Name: appName,
-		Icon: appIcon,
+		Icon: appIconFS,
 	}
 }
 

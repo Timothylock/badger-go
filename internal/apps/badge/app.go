@@ -1,6 +1,7 @@
 package badge
 
 import (
+	"embed"
 	_ "embed"
 	"machine"
 	"time"
@@ -26,7 +27,7 @@ var (
 )
 
 //go:embed icon.png
-var appIcon []byte
+var appIconFS embed.FS
 
 type Badge struct {
 	display uc8151.Device
@@ -39,7 +40,7 @@ func NewBadgeApp(display *uc8151.Device) apps.Application {
 func (b *Badge) GetAppConfig() apps.AppConfig {
 	return apps.AppConfig{
 		Name: appName,
-		Icon: appIcon,
+		Icon: appIconFS,
 	}
 }
 
