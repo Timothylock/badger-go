@@ -37,7 +37,7 @@ func (h *About) Run() error {
 	h.display.ClearBuffer()
 	h.display.WaitUntilIdle()
 	ui.TopNavBar(&h.display, apps.OSName, h.GetAppConfig().Name, apps.OSVersion)
-	ui.BottomNavBar(&h.display, "[a] Back", "", "")
+	ui.BottomNavBar(&h.display, "[a] Back", "", "Icons: Smashicons")
 
 	// Initialize Buttons
 	btnA := machine.BUTTON_A

@@ -86,21 +86,21 @@ func (h *Home) Run() error {
 		if refresh {
 			// Draw Apps
 			cfg := curPage[0].GetAppConfig()
-			err := drawIconResized(&h.display, 18, 40, 60, 60, cfg.Icon)
+			err := drawIconResized(&h.display, 16, 36, 60, 60, cfg.Icon)
 			if err != nil {
 				return err
 			}
 			tinyfont.WriteLine(&h.display, &proggy.TinySZ8pt7b, int16(48-(len(cfg.Name)*3)), 110, cfg.Name, ui.ColourBlack())
 
 			cfg = curPage[1].GetAppConfig()
-			err = drawIconResized(&h.display, 118, 40, 60, 60, cfg.Icon)
+			err = drawIconResized(&h.display, 116, 36, 60, 60, cfg.Icon)
 			if err != nil {
 				return err
 			}
 			tinyfont.WriteLine(&h.display, &proggy.TinySZ8pt7b, int16(149-(len(cfg.Name)*3)), 110, cfg.Name, ui.ColourBlack())
 
 			cfg = curPage[2].GetAppConfig()
-			err = drawIconResized(&h.display, 218, 40, 60, 60, cfg.Icon)
+			err = drawIconResized(&h.display, 216, 36, 60, 60, cfg.Icon)
 			if err != nil {
 				return err
 			}
@@ -157,18 +157,16 @@ func drawIconResized(display *uc8151.Device, x, y, w, h int16, iconFS embed.FS) 
 		return err
 	}
 
-	//newImage := resize.Resize(uint(w), uint(h), img, resize.Lanczos3)
-
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
 
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
-			r, g, b, a := img.At(j, i).RGBA()
-			if a <= 5 {
-				continue
+			_, _, _, a := img.At(j, i).RGBA()
+			// Convert to max of 255
+			if a > 0 {
+				display.SetPixel(int16(j)+x, int16(i)+y, color.RGBA{uint8(255), uint8(255), uint8(255), uint8(a)})
 			}
-			display.SetPixel(int16(j)+x, int16(i)+y, color.RGBA{uint8(r), uint8(g), uint8(b), uint8(255)})
 		}
 	}
 
